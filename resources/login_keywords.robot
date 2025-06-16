@@ -5,10 +5,11 @@ Library    SeleniumLibrary
 ${LOGIN_URL}    https://qa-practice.netlify.app/auth_ecommerce
 ${EMAIL}        admin@admin.com
 ${PASSWORD}     admin123
+${OPTIONS}      headless
 
 *** Keywords ***
 Open Browser To Login Page
-    Open Browser     ${LOGINURL}    chrome
+    Open Browser     ${LOGIN_URL}    chrome    options=${OPTIONS}
     Maximize Browser Window
 
 Input Login Credentials
