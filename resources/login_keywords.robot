@@ -5,11 +5,15 @@ Library    SeleniumLibrary
 ${LOGIN_URL}    https://qa-practice.netlify.app/auth_ecommerce
 ${EMAIL}        admin@admin.com
 ${PASSWORD}     admin123
-${OPTIONS}      add_argument(--headless)    add_argument(--no-sandbox)    add_argument(--disable-dev-shm-usage)
 
 *** Keywords ***
 Open Browser To Login Page
-    Open Browser     ${LOGIN_URL}    chrome    options=${OPTIONS}
+    ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+    Call Method    ${options}    add_argument    --headless
+    Call Method    ${options}    add_argument    --no-sandbox
+    Call Method    ${options}    add_argument    --disable-dev-shm-usage
+    Create WebDriver    Chrome    options=${options}
+    Go To    ${LOGIN_URL}
     Maximize Browser Window
 
 Input Login Credentials
@@ -19,12 +23,8 @@ Input Login Credentials
 Submit Form
     Click Button    id=submitLoginBtn
 
-
-# Login with Valid Credentials
 Login to Application
-    Open Browser     ${LOGIN_URL}    chrome
-    Maximize Browser Window
-    Input Text    id=email       ${EMAIL}
-    Input Text    id=password    ${PASSWORD}
-    Click Button    id=submitLoginBtn
+    Open Browser To Login Page
+    Input Login Credentials
+    Submit Form
     Wait Until Page Contains Element    id=prooood
