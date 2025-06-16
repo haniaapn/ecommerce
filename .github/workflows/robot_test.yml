@@ -1,0 +1,43 @@
+name: Robot Framework Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  robot-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install browser dependencies (Chrome)
+      run: |
+        sudo apt update
+        sudo apt install -y wget unzip xvfb libnss3 libgconf-2-4 libxi6 libxcursor1
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo dpkg -i google-chrome*.deb || sudo apt -f install -y
+        google-chrome --version
+
+    - name: Run Robot Framework Tests (with xvfb)
+      run: |
+        xvfb-run robot -d results tests/
+
+    - name: Upload Robot Test Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: robot-report
+        path: results/
