@@ -5,7 +5,7 @@ Library    SeleniumLibrary
 ${LOGIN_URL}    https://qa-practice.netlify.app/auth_ecommerce
 ${EMAIL}        admin@admin.com
 ${PASSWORD}     admin123
-${OPTIONS}      headless
+${OPTIONS}      add_argument(--headless)    add_argument(--no-sandbox)    add_argument(--disable-dev-shm-usage)
 
 *** Keywords ***
 Open Browser To Login Page
